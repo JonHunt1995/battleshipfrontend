@@ -1,0 +1,32 @@
+.hovered {
+  background: #f24e5b;
+}
+
+.selected {
+  background: #e8071a;
+}
+
+.water {
+  background: #4287f5;
+}
+
+.cell {
+  aspect-ratio: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(10, 40px);
+  gap: 2px;
+  justify-content: center;
+  margin: auto;
+}
+
+.add-buttons {
+  display: flex;
+  justify-content: center;
+  margin: auto;
+}
