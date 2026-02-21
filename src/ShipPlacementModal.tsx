@@ -1,9 +1,14 @@
-import { useState } from 'react';
-import { useEffect } from 'react';
-import './App.css';
-import ShipPlacementCell from './ShipPlacementCell';
+import { useState } from "react";
+import { useEffect } from "react";
+import "./App.css";
+import ShipPlacementCell from "./ShipPlacementCell";
 
-type shipName = "Carrier" | "Battleship" | "Cruiser" | "Submarine" | "Destroyer";
+type shipName =
+  | "Carrier"
+  | "Battleship"
+  | "Cruiser"
+  | "Submarine"
+  | "Destroyer";
 
 type ShipsState = Record<shipName, number[]>;
 
@@ -12,11 +17,6 @@ type shipPosition = {
   vert: boolean;
   name: shipName;
 };
-
-type cellData = {
-  selected: boolean;
-  idx: number;
-}
 
 const SHIP_SIZES: Record<shipName, number> = {
   Carrier: 5,
@@ -28,7 +28,7 @@ const SHIP_SIZES: Record<shipName, number> = {
 
 const getIndicesWithShips = (ships: ShipsState) => {
   return Object.values(ships).flat();
-}
+};
 
 const getIndices = (curr: shipPosition) => {
   const rowSize = 10;
@@ -57,25 +57,23 @@ const inBounds = (curr: shipPosition) => {
 };
 
 const noOverlaps = (curr: shipPosition, ships: ShipsState) => {
-  const shipIndices = getIndicesWithShips(ships)
+  const shipIndices = getIndicesWithShips(ships);
   return getIndices(curr).every((idx) => !shipIndices.includes(idx));
-}
+};
 
 const isValid = (curr: shipPosition, ships: ShipsState) => {
   return inBounds(curr) && noOverlaps(curr, ships);
-}
+};
 
-function ShipPlacementModal() {
-  const defaultData: cellData[] = Array.from({length: 100}, (_, i )=> ({hovered: false, selected: false, idx: i}));
+const ShipPlacementModal = () => {
   const defaultShipsState: ShipsState = {
-    "Carrier": [],
-    "Battleship": [],
-    "Cruiser": [],
-    "Submarine": [],
-    "Destroyer": []
+    Carrier: [],
+    Battleship: [],
+    Cruiser: [],
+    Submarine: [],
+    Destroyer: [],
   };
-  const [shipsToUpload, setShipsToUpload]= useState(defaultShipsState);
-  const [cellData, setCellData] = useState(defaultData);
+  const [shipsToUpload, setShipsToUpload] = useState(defaultShipsState);
   const [currShipPosition, setCurrShipPosition] = useState<shipPosition>({
     idx: 0,
     vert: false,
@@ -89,102 +87,107 @@ function ShipPlacementModal() {
 
   // Doesn't need input because the index was changed with handleMouseOver
   const handleClick = () => {
-    if (!isValid(currShipPosition, shipsToUpload)) return
-    setCellData(cellData.map((datum) => {
-      if (getIndices(currShipPosition).includes(datum.idx)) {
-        datum.selected = true;
-      }
-      return datum;
-    }))
+    if (!isValid(currShipPosition, shipsToUpload)) return;
     setShipsToUpload({
       ...shipsToUpload,
-      [currShipPosition.name]: getIndices(currShipPosition)
-    })
-  }
-
-useEffect(() => {
-  const handleKeyDown = (e: KeyboardEvent) => {
-    if (e.key === ' ') {
-      e.preventDefault(); 
-      
-      setCurrShipPosition((prev) => ({
-        ...prev,
-        vert: !prev.vert,
-      }));
-    }
+      [currShipPosition.name]: getIndices(currShipPosition),
+    });
   };
 
-  window.addEventListener('keydown', handleKeyDown);
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === " ") {
+        e.preventDefault();
 
-  return () => window.removeEventListener('keydown', handleKeyDown);
-}, []); 
+        setCurrShipPosition((prev) => ({
+          ...prev,
+          vert: !prev.vert,
+        }));
+      }
+    };
 
-  type buttonName = shipName | "Reset" | "Reset All";
+    window.addEventListener("keydown", handleKeyDown);
 
-  const buttonNames: buttonName[] = ["Carrier", "Battleship", "Cruiser", "Submarine", "Destroyer", "Reset All"];
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
-  const blowItUp = () => {
-    setShipsToUpload(defaultShipsState);
-    setCellData(defaultData);
-  };
+  type buttonName = shipName | "Reset All";
+
+  const buttonNames: buttonName[] = [
+    "Carrier",
+    "Battleship",
+    "Cruiser",
+    "Submarine",
+    "Destroyer",
+    "Reset All",
+  ];
 
   const uploadShips = () => {
     console.log(shipsToUpload);
-  }
+  };
 
   const buttons = buttonNames.map((name) => {
     const handleClick = () => {
-      if (name === "Reset") return 
       if (name === "Reset All") {
-        blowItUp();
+        setShipsToUpload(defaultShipsState);
       } else if (shipsToUpload[name].length === 0) {
         setCurrShipPosition({
           ...currShipPosition,
-          name: name
-        })
+          name: name,
+        });
       } else {
         setShipsToUpload({
           ...shipsToUpload,
-          [name]: []
+          [name]: [],
         });
       }
-    }
+    };
     let buttonName: buttonName = name;
-    const isShipType = name !== 'Reset' && name !== 'Reset All';
-    if (isShipType && shipsToUpload[name].length !== 0) {
-      buttonName = "Reset"
-    }
-    return <button className="add-button" onClick={handleClick}>{buttonName}</button>
-  })
+    const isShipType = name !== "Reset All";
 
-  const cells = cellData.map((datum) => (
+    return (
+      <button className="add-button" onClick={handleClick}>
+        {isShipType && shipsToUpload[name].length > 0 ? "Reset" : buttonName}
+      </button>
+    );
+  });
+
+  const cells = Array.from({ length: 100 }, (_, idx) => (
     <ShipPlacementCell
-      key={datum.idx}
+      key={idx}
       //selected={datum.selected}
-      selected={getIndicesWithShips(shipsToUpload).includes(datum.idx)}
-      hovered={getIndices(currShipPosition).includes(datum.idx) && isValid(currShipPosition, shipsToUpload)}
-      idx={datum.idx}
-      onMouseOver={() => handleMouseOver(datum.idx)}
+      selected={getIndicesWithShips(shipsToUpload).includes(idx)}
+      hovered={
+        getIndices(currShipPosition).includes(idx) &&
+        isValid(currShipPosition, shipsToUpload)
+      }
+      idx={idx}
+      onMouseOver={() => handleMouseOver(idx)}
       onClick={handleClick}
     />
   ));
 
-  const notAllShipsAdded = Object.values(shipsToUpload).some((value) => value.length === 0);
-  
+  const notAllShipsAdded = Object.values(shipsToUpload).some(
+    (value) => value.length === 0,
+  );
 
   return (
     <main>
       <section className="add-buttons">
-        {notAllShipsAdded ? buttons : 
-        <>
-          <button onClick={uploadShips}>Submit</button>
-          <button onClick={blowItUp}>Reset</button>
-        </>
-        }
-        </section>
+        {notAllShipsAdded ? (
+          buttons
+        ) : (
+          <>
+            <button onClick={uploadShips}>Submit</button>
+            <button onClick={() => setShipsToUpload(defaultShipsState)}>
+              Reset
+            </button>
+          </>
+        )}
+      </section>
       <section className="board">{cells}</section>
     </main>
   );
-}
+};
 
 export default ShipPlacementModal;
