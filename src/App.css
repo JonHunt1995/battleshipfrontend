@@ -49,3 +49,13 @@
     margin: auto;
   }
 }
+
+.instructions {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: auto;
+  padding: 0.5rem;
+  max-width: 480px;
+  gap: 2px;
+}

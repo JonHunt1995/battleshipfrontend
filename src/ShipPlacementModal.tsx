@@ -208,7 +208,23 @@ const ShipPlacementModal = () => {
         }))}>
           Switch to {currShipPosition.vert ? "Horizontal" : "Vertical"}
        </button>
-     
+       <div className="instructions">
+        <h2>Instructions</h2>
+        <p>
+        Choose which ships to place by first clicking one of the buttons 
+        in the top row for the ship type (the button should then be 
+        highlighted to indicate that it's selected) and then click on the 
+        button to add that ship type to the board. You can hover over a cell
+        to preview a location and if it's highlighted, means it's a valid 
+        location to place that ship. You can either use the space bar or the
+        vertical toggle button on mobile that says "Switch to `Other Position`" 
+        to flip the ship position from vertical or horizontal. Once adding a 
+        ship, it should move to the next smallest ship to add. After adding all 
+        the ships where you want them, the buttons should then transition to 2 
+        options: either to submit your ship placements for the game to start or 
+        to reset your ship positions if you want to rearrange them.
+        </p>
+      </div>
     </section>
   );
 };
