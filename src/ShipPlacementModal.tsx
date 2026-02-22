@@ -186,6 +186,14 @@ const ShipPlacementModal = () => {
         )}
       </section>
       <section className="board">{cells}</section>
+      <button 
+        className="mobile-only-vert-toggle"
+        onClick={() => setCurrShipPosition((prev) => ({
+          ...prev,
+          vert: !prev.vert,
+        }))}>
+          Switch to {currShipPosition.vert ? "Horizontal" : "Vertical"}
+       </button>
     </main>
   );
 };
