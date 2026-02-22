@@ -79,6 +79,15 @@ const ShipPlacementModal = () => {
     vert: false,
     name: "Carrier",
   });
+  const highlighted = getIndices(currShipPosition);
+  const ships = getIndicesWithShips(shipsToUpload);
+  const shipNames: shipName[] = [
+    "Carrier",
+    "Battleship",
+    "Cruiser",
+    "Submarine",
+    "Destroyer",
+  ];
 
   // Needs index to reset candidate squares for ship
   const handleMouseOver = (index: number) => {
@@ -90,8 +99,14 @@ const ShipPlacementModal = () => {
     if (!isValid(currShipPosition, shipsToUpload)) return;
     setShipsToUpload({
       ...shipsToUpload,
-      [currShipPosition.name]: getIndices(currShipPosition),
+      [currShipPosition.name]: highlighted,
     });
+    const nextShip = shipNames[shipNames.indexOf(currShipPosition.name) % 5 + 1];
+
+    setCurrShipPosition(
+      {...currShipPosition,
+        name: nextShip
+      });
   };
 
   useEffect(() => {
@@ -149,16 +164,15 @@ const ShipPlacementModal = () => {
       <button className={name === currShipPosition.name ? "highlighted" : "add-button"} onClick={handleClick}>
         {isShipType && shipsToUpload[name].length > 0 ? "Reset" : buttonName}
       </button>
-    );
+    );    
   });
-
+ 
   const cells = Array.from({ length: 100 }, (_, idx) => (
     <ShipPlacementCell
       key={idx}
-      //selected={datum.selected}
-      selected={getIndicesWithShips(shipsToUpload).includes(idx)}
+      selected={ships.includes(idx)}
       hovered={
-        getIndices(currShipPosition).includes(idx) &&
+        highlighted.includes(idx) &&
         isValid(currShipPosition, shipsToUpload)
       }
       idx={idx}
@@ -194,6 +208,7 @@ const ShipPlacementModal = () => {
         }))}>
           Switch to {currShipPosition.vert ? "Horizontal" : "Vertical"}
        </button>
+     
     </section>
   );
 };

@@ -44,7 +44,8 @@
 @media (max-width: 768px) {
   .mobile-only-vert-toggle {
     display: flex;
-    max-width: 120px;
+    min-width: 120px;
+    max-width: 150px;
     margin: auto;
   }
 }
