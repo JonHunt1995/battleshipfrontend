@@ -146,7 +146,7 @@ const ShipPlacementModal = () => {
     const isShipType = name !== "Reset All";
 
     return (
-      <button className="add-button" onClick={handleClick}>
+      <button className={name === currShipPosition.name ? "highlighted" : "add-button"} onClick={handleClick}>
         {isShipType && shipsToUpload[name].length > 0 ? "Reset" : buttonName}
       </button>
     );
@@ -172,7 +172,7 @@ const ShipPlacementModal = () => {
   );
 
   return (
-    <main>
+    <section className="ShipPlaceModal">
       <section className="add-buttons">
         {notAllShipsAdded ? (
           buttons
@@ -194,7 +194,7 @@ const ShipPlacementModal = () => {
         }))}>
           Switch to {currShipPosition.vert ? "Horizontal" : "Vertical"}
        </button>
-    </main>
+    </section>
   );
 };
 

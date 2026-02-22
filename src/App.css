@@ -1,8 +1,8 @@
-.hovered {
-  background: #f24e5b;
+.highlighted {
+  background: #f3f10d;
 }
 
-.selected {
+.ship {
   background: #e8071a;
 }
 
@@ -17,6 +17,12 @@
   align-items: center;
 }
 
+.ShipPlaceModal {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
 .board {
   display: grid;
   grid-template-columns: repeat(10, 40px);
@@ -29,4 +35,16 @@
   display: flex;
   justify-content: center;
   margin: auto;
+}
+
+.mobile-only-vert-toggle {
+    display: none;
+    justify-content: center;
+}
+@media (max-width: 768px) {
+  .mobile-only-vert-toggle {
+    display: flex;
+    max-width: 120px;
+    margin: auto;
+  }
 }
