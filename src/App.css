@@ -29,6 +29,9 @@
   gap: 2px;
   justify-content: center;
   margin: auto;
+  div {
+    outline: solid black 2px;
+  }
 }
 
 .add-buttons {
@@ -53,9 +56,13 @@
 .instructions {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  margin: auto;
-  padding: 0.5rem;
+  justify-content: flex-start;
+  margin: 1rem auto;
   max-width: 480px;
   gap: 2px;
+
+  h2, p {
+    padding: 0.5rem;
+    margin-top: -1rem;
+  }
 }
