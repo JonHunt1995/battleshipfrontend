@@ -7,6 +7,8 @@ type ShipPlacementCellProps = {
 }
 
 function ShipPlacementCell({ selected, hovered, idx, onMouseOver, onClick }: ShipPlacementCellProps) {
+  const startingRowCharCode = "A".charCodeAt(0);
+  const coordinate = `${String.fromCharCode(startingRowCharCode + Math.floor(idx / 10))}${idx % 10 + 1}`;
   let styleClass = "water cell"
   if (selected) {
     styleClass = "ship cell"
@@ -14,7 +16,7 @@ function ShipPlacementCell({ selected, hovered, idx, onMouseOver, onClick }: Shi
     styleClass = "highlighted cell"
   }
   return (
-    <div className={styleClass} onMouseOver={onMouseOver} onClick={onClick}>{idx}</div>
+    <div className={styleClass} onMouseOver={onMouseOver} onClick={onClick}>{coordinate}</div>
   )
 }
 
