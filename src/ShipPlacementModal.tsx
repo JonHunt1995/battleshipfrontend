@@ -109,6 +109,13 @@ const ShipPlacementModal = () => {
       });
   };
 
+  const handleMouseLeave = () => {
+    setCurrShipPosition({
+      ...currShipPosition,
+      idx: 100
+    })
+  }
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === " ") {
@@ -199,7 +206,7 @@ const ShipPlacementModal = () => {
           </>
         )}
       </section>
-      <section className="board">{cells}</section>
+      <section className="board" onMouseLeave={handleMouseLeave}>{cells}</section>
       <button 
         className="mobile-only-vert-toggle"
         onClick={() => setCurrShipPosition((prev) => ({
