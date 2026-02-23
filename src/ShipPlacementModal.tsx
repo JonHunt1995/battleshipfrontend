@@ -201,10 +201,6 @@ const ShipPlacementModal = () => {
     (value) => value.length === 0,
   );
 
-  useEffect(() => {
-  console.table(shipsToUpload);
-}, [shipsToUpload]);
-
   return (
     <section className="ShipPlaceModal">
       <section className="add-buttons">
