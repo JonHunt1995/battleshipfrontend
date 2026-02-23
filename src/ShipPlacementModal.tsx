@@ -101,20 +101,18 @@ const ShipPlacementModal = () => {
       ...shipsToUpload,
       [currShipPosition.name]: highlighted,
     });
-    const nextShip = shipNames[shipNames.indexOf(currShipPosition.name) % 5 + 1];
+    const nextShip =
+      shipNames[(shipNames.indexOf(currShipPosition.name) % 5) + 1];
 
-    setCurrShipPosition(
-      {...currShipPosition,
-        name: nextShip
-      });
+    setCurrShipPosition({ ...currShipPosition, name: nextShip });
   };
 
   const handleMouseLeave = () => {
     setCurrShipPosition({
       ...currShipPosition,
-      idx: 100
-    })
-  }
+      idx: 100,
+    });
+  };
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -148,10 +146,17 @@ const ShipPlacementModal = () => {
     console.log(shipsToUpload);
   };
 
+  const resetShips = () => {
+    setShipsToUpload(defaultShipsState);
+    setCurrShipPosition({
+      ...currShipPosition,
+      name: "Carrier"
+    })
+  }
   const buttons = buttonNames.map((name) => {
     const handleClick = () => {
       if (name === "Reset All") {
-        setShipsToUpload(defaultShipsState);
+        resetShips();
       } else if (shipsToUpload[name].length === 0) {
         setCurrShipPosition({
           ...currShipPosition,
@@ -168,19 +173,23 @@ const ShipPlacementModal = () => {
     const isShipType = name !== "Reset All";
 
     return (
-      <button className={name === currShipPosition.name ? "highlighted" : "add-button"} onClick={handleClick}>
+      <button
+        className={
+          name === currShipPosition.name ? "highlighted" : "add-button"
+        }
+        onClick={handleClick}
+      >
         {isShipType && shipsToUpload[name].length > 0 ? "Reset" : buttonName}
       </button>
-    );    
+    );
   });
- 
+
   const cells = Array.from({ length: 100 }, (_, idx) => (
     <ShipPlacementCell
       key={idx}
       selected={ships.includes(idx)}
       hovered={
-        highlighted.includes(idx) &&
-        isValid(currShipPosition, shipsToUpload)
+        highlighted.includes(idx) && isValid(currShipPosition, shipsToUpload)
       }
       idx={idx}
       onMouseOver={() => handleMouseOver(idx)}
@@ -192,6 +201,10 @@ const ShipPlacementModal = () => {
     (value) => value.length === 0,
   );
 
+  useEffect(() => {
+  console.table(shipsToUpload);
+}, [shipsToUpload]);
+
   return (
     <section className="ShipPlaceModal">
       <section className="add-buttons">
@@ -200,36 +213,41 @@ const ShipPlacementModal = () => {
         ) : (
           <>
             <button onClick={uploadShips}>Submit</button>
-            <button onClick={() => setShipsToUpload(defaultShipsState)}>
+            <button onClick={resetShips}>
               Reset
             </button>
           </>
         )}
       </section>
-      <section className="board" onMouseLeave={handleMouseLeave}>{cells}</section>
-      <button 
+      <section className="board" onMouseLeave={handleMouseLeave}>
+        {cells}
+      </section>
+      <button
         className="mobile-only-vert-toggle"
-        onClick={() => setCurrShipPosition((prev) => ({
-          ...prev,
-          vert: !prev.vert,
-        }))}>
-          Switch to {currShipPosition.vert ? "Horizontal" : "Vertical"}
-       </button>
-       <div className="instructions">
+        onClick={() =>
+          setCurrShipPosition((prev) => ({
+            ...prev,
+            vert: !prev.vert,
+          }))
+        }
+      >
+        Switch to {currShipPosition.vert ? "Horizontal" : "Vertical"}
+      </button>
+      <div className="instructions">
         <h2>Instructions</h2>
         <p>
-        Choose which ships to place by first clicking one of the buttons 
-        in the top row for the ship type (the button should then be 
-        highlighted to indicate that it's selected) and then click on the 
-        button to add that ship type to the board. You can hover over a cell
-        to preview a location and if it's highlighted, means it's a valid 
-        location to place that ship. You can either use the space bar or the
-        vertical toggle button on mobile that says "Switch to `Other Position`" 
-        to flip the ship position from vertical or horizontal. Once adding a 
-        ship, it should move to the next smallest ship to add. After adding all 
-        the ships where you want them, the buttons should then transition to 2 
-        options: either to submit your ship placements for the game to start or 
-        to reset your ship positions if you want to rearrange them.
+          Choose which ships to place by first clicking one of the buttons in
+          the top row for the ship type (the button should then be highlighted
+          to indicate that it's selected) and then click on the button to add
+          that ship type to the board. You can hover over a cell to preview a
+          location and if it's highlighted, means it's a valid location to place
+          that ship. You can either use the space bar or the vertical toggle
+          button on mobile that says "Switch to `Other Position`" to flip the
+          ship position from vertical or horizontal. Once adding a ship, it
+          should move to the next smallest ship to add. After adding all the
+          ships where you want them, the buttons should then transition to 2
+          options: either to submit your ship placements for the game to start
+          or to reset your ship positions if you want to rearrange them.
         </p>
       </div>
     </section>
