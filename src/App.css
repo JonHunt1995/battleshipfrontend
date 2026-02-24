@@ -3,6 +3,11 @@
 }
 
 .ship {
+  background: #676c73;
+  color: white;
+}
+
+.invalid {
   background: #e8071a;
 }
 

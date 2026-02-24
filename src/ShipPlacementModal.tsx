@@ -80,6 +80,11 @@ const ShipPlacementModal = () => {
     name: "Carrier",
   });
   const highlighted = getIndices(currShipPosition);
+  const sameRowHighlighted = currShipPosition.vert
+    ? highlighted
+    : highlighted.filter(
+        (idx) => Math.floor(idx / 10) === Math.floor(highlighted[0] / 10),
+      );
   const ships = getIndicesWithShips(shipsToUpload);
   const shipNames: shipName[] = [
     "Carrier",
@@ -150,9 +155,9 @@ const ShipPlacementModal = () => {
     setShipsToUpload(defaultShipsState);
     setCurrShipPosition({
       ...currShipPosition,
-      name: "Carrier"
-    })
-  }
+      name: "Carrier",
+    });
+  };
   const buttons = buttonNames.map((name) => {
     const handleClick = () => {
       if (name === "Reset All") {
@@ -188,8 +193,12 @@ const ShipPlacementModal = () => {
     <ShipPlacementCell
       key={idx}
       selected={ships.includes(idx)}
+      invalid={
+        !isValid(currShipPosition, shipsToUpload) &&
+        sameRowHighlighted.includes(idx)
+      }
       hovered={
-        highlighted.includes(idx) && isValid(currShipPosition, shipsToUpload)
+        isValid(currShipPosition, shipsToUpload) && highlighted.includes(idx)
       }
       idx={idx}
       onMouseOver={() => handleMouseOver(idx)}
@@ -209,9 +218,7 @@ const ShipPlacementModal = () => {
         ) : (
           <>
             <button onClick={uploadShips}>Submit</button>
-            <button onClick={resetShips}>
-              Reset
-            </button>
+            <button onClick={resetShips}>Reset</button>
           </>
         )}
       </section>
