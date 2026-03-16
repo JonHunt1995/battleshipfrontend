@@ -2,6 +2,12 @@ import { useState } from "react";
 import { useEffect } from "react";
 import "./App.css";
 import ShipPlacementCell from "./ShipPlacementCell";
+import {
+  redirect,
+  type ActionFunctionArgs,
+  Form,
+  useNavigation,
+} from "react-router-dom";
 
 type shipName =
   | "Carrier"
@@ -65,7 +71,30 @@ const isValid = (curr: shipPosition, ships: ShipsState) => {
   return inBounds(curr) && noOverlaps(curr, ships);
 };
 
+export const uploadShipsAction = async ({ request }: ActionFunctionArgs) => {
+  const formData = await request.formData();
+  const shipsData = formData.get("shipsToUpload"); // This will be our JSON string
+
+  const response = await fetch("/api/setup", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: shipsData,
+  });
+
+  if (!response.ok) {
+    return { error: `Server error: ${response.status}` };
+  }
+
+  const data = response.json();
+
+  console.log(data);
+
+  return redirect(`/play`);
+};
+
 const ShipPlacementModal = () => {
+  const navigation = useNavigation();
+  const isSubmitting = navigation.state === "submitting";
   const defaultShipsState: ShipsState = {
     Carrier: [],
     Battleship: [],
@@ -147,10 +176,6 @@ const ShipPlacementModal = () => {
     "Reset All",
   ];
 
-  const uploadShips = () => {
-    console.log(shipsToUpload);
-  };
-
   const resetShips = () => {
     setShipsToUpload(defaultShipsState);
     setCurrShipPosition({
@@ -193,6 +218,9 @@ const ShipPlacementModal = () => {
     <ShipPlacementCell
       key={idx}
       selected={ships.includes(idx)}
+      style={
+        ships.includes(idx) ? { viewTransitionName: `cell-${idx}` } : undefined
+      }
       invalid={
         !isValid(currShipPosition, shipsToUpload) &&
         sameRowHighlighted.includes(idx)
@@ -216,10 +244,22 @@ const ShipPlacementModal = () => {
         {notAllShipsAdded ? (
           buttons
         ) : (
-          <>
-            <button onClick={uploadShips}>Submit</button>
-            <button onClick={resetShips}>Reset</button>
-          </>
+          <div style={{ display: "flex", gap: "10px" }}>
+            <Form method="post" viewTransition>
+              <input
+                type="hidden"
+                name="shipsToUpload"
+                value={JSON.stringify(shipsToUpload)}
+              />
+
+              <button type="submit" disabled={isSubmitting}>
+                {isSubmitting ? "Uploading..." : "Submit"}
+              </button>
+            </Form>
+            <button onClick={resetShips} disabled={isSubmitting}>
+              Reset
+            </button>
+          </div>
         )}
       </section>
       <section className="board" onMouseLeave={handleMouseLeave}>

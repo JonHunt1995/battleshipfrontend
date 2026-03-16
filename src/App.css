@@ -46,8 +46,8 @@
 }
 
 .mobile-only-vert-toggle {
-    display: none;
-    justify-content: center;
+  display: none;
+  justify-content: center;
 }
 @media (max-width: 768px) {
   .mobile-only-vert-toggle {
@@ -66,8 +66,16 @@
   max-width: 480px;
   gap: 2px;
 
-  h2, p {
+  h2,
+  p {
     padding: 0.5rem;
     margin-top: -1rem;
   }
+}
+
+.Game {
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+  align-items: center;
 }

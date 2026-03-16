@@ -1,26 +1,42 @@
 type ShipPlacementCellProps = {
   selected: boolean;
   hovered: boolean;
-  invalid: boolean
+  invalid: boolean;
   idx: number;
+  style?: React.CSSProperties;
   onMouseOver: () => void;
   onClick: () => void;
-}
+};
 
-function ShipPlacementCell({ selected, hovered, invalid, idx, onMouseOver, onClick }: ShipPlacementCellProps) {
+function ShipPlacementCell({
+  style,
+  selected,
+  hovered,
+  invalid,
+  idx,
+  onMouseOver,
+  onClick,
+}: ShipPlacementCellProps) {
   const startingRowCharCode = "A".charCodeAt(0);
-  const coordinate = `${String.fromCharCode(startingRowCharCode + Math.floor(idx / 10))}${idx % 10 + 1}`;
-  let styleClass = "water cell"
+  const coordinate = `${String.fromCharCode(startingRowCharCode + Math.floor(idx / 10))}${(idx % 10) + 1}`;
+  let styleClass = "water cell";
   if (selected) {
-    styleClass = "ship cell"
+    styleClass = "ship cell";
   } else if (hovered) {
-    styleClass = "highlighted cell"
+    styleClass = "highlighted cell";
   } else if (invalid) {
-    styleClass = "invalid cell"
+    styleClass = "invalid cell";
   }
   return (
-    <div className={styleClass} onMouseOver={onMouseOver} onClick={onClick}>{coordinate}</div>
-  )
+    <div
+      style={style}
+      className={styleClass}
+      onMouseOver={onMouseOver}
+      onClick={onClick}
+    >
+      {coordinate}
+    </div>
+  );
 }
 
-export default ShipPlacementCell
+export default ShipPlacementCell;
