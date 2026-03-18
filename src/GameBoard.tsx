@@ -1,11 +1,13 @@
 import { useLoaderData, type LoaderFunctionArgs } from "react-router-dom";
-import ShipsState from "./ShipPlacementModal";
 import PlayerCell from "./PlayerCell";
 
 export const gameBoardLoader = async ({ request }: LoaderFunctionArgs) => {
   const response = await fetch("/api/play", {
     method: "GET",
     credentials: "include",
+    headers: {
+      Cookie: request.headers.get("Cookie") || "",
+    },
   });
 
   if (response.ok) {

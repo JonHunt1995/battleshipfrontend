@@ -7,7 +7,8 @@
   color: white;
 }
 
-.invalid {
+.invalid,
+.hit {
   background: #e8071a;
 }
 
