@@ -71,25 +71,30 @@ const isValid = (curr: shipPosition, ships: ShipsState) => {
   return inBounds(curr) && noOverlaps(curr, ships);
 };
 
-export const uploadShipsAction = async ({ request }: ActionFunctionArgs) => {
+export const uploadShipsAction = async ({
+  request,
+  params,
+}: ActionFunctionArgs) => {
   const formData = await request.formData();
-  const shipsData = formData.get("shipsToUpload"); // This will be our JSON string
+  const shipsData = formData.get("shipsToUpload");
+  const { gameid } = params;
 
-  const response = await fetch("/api/setup", {
+  const response = await fetch(`/api/setup/${gameid}`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: shipsData,
+    credentials: "include",
   });
 
   if (!response.ok) {
     return { error: `Server error: ${response.status}` };
   }
 
-  const data = response.json();
+  const data = await response.json();
 
   console.log(data);
 
-  return redirect(`/play`);
+  return redirect(`/play/${gameid}`);
 };
 
 const ShipPlacementModal = () => {

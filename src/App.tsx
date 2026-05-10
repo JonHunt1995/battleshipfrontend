@@ -5,12 +5,12 @@ import { createHashRouter, RouterProvider } from "react-router-dom";
 
 const router = createHashRouter([
   {
-    path: "/",
+    path: "/:gameid",
     element: <ShipPlacementModal />,
     action: uploadShipsAction,
   },
   {
-    path: "/play",
+    path: "/play/:gameid",
     element: <GameBoard />,
     loader: gameBoardLoader,
   },
