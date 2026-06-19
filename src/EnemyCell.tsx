@@ -1,12 +1,12 @@
 type EnemyCellProps = {
-  isShip: boolean;
   isHit: boolean;
   isMiss: boolean;
   idx: number;
   style?: React.CSSProperties;
+  onClick: (idx: number) => void;
 };
 
-function EnemyCell({ style, isHit, isMiss, idx }: EnemyCellProps) {
+function EnemyCell({ style, isHit, isMiss, idx, onClick }: EnemyCellProps) {
   const startingRowCharCode = "A".charCodeAt(0);
   const coordinate = `${String.fromCharCode(startingRowCharCode + Math.floor(idx / 10))}${(idx % 10) + 1}`;
   let styleClass = "water cell";
@@ -16,7 +16,7 @@ function EnemyCell({ style, isHit, isMiss, idx }: EnemyCellProps) {
     styleClass = "miss cell";
   }
   return (
-    <div style={style} className={styleClass}>
+    <div style={style} className={styleClass} onClick={() => onClick(idx)}>
       {coordinate}
     </div>
   );

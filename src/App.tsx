@@ -1,6 +1,6 @@
 import "./App.css";
 import ShipPlacementModal, { uploadShipsAction } from "./ShipPlacementModal";
-import GameBoard, { gameBoardLoader } from "./GameBoard";
+import GameBoard, { gameBoardLoader, gameBoardAction } from "./GameBoard";
 import { createHashRouter, RouterProvider } from "react-router-dom";
 
 const router = createHashRouter([
@@ -13,6 +13,7 @@ const router = createHashRouter([
     path: "/play/:gameid",
     element: <GameBoard />,
     loader: gameBoardLoader,
+    action: gameBoardAction,
   },
 ]);
 
