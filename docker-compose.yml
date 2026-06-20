@@ -1,0 +1,17 @@
+version: "3.8"
+
+services:
+    frontend:
+        build: .
+        ports:
+            - "5173:5173"
+        volumes:
+            # Map your local code to the container for live-reloading
+            - .:/app
+            # Create an anonymous volume for node_modules.
+            # This prevents your host machine's OS-specific node_modules from
+            # overwriting the container's Linux-specific node_modules.
+            - /app/node_modules
+        environment:
+            # Tells Vite to enable polling if live-reload doesn't work out of the box
+            - CHOKIDAR_USEPOLLING=true
