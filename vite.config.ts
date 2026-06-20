@@ -9,7 +9,7 @@ export default defineConfig({
         // This is the magic part
         proxy: {
             "/api": {
-                target: "'http://host.docker.internal:4000'", // Your Go API address
+                target: "http://host.docker.internal:4000", // Your Go API address
                 changeOrigin: true,
             },
         },

@@ -15,3 +15,6 @@ services:
         environment:
             # Tells Vite to enable polling if live-reload doesn't work out of the box
             - CHOKIDAR_USEPOLLING=true
+
+        extra_hosts:
+            - "host.docker.internal:host-gateway"
