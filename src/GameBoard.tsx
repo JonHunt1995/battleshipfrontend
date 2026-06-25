@@ -107,9 +107,11 @@ const GameBoard = () => {
     const isSubmitting = fetcher.state !== "idle";
 
     const handleCellClick = (idx: number) => {
+        console.log("reaches here", idx);
         if (isSubmitting || !gs.IsYourTurn) return; // Prevent clicking while a move is processing
-        if (opponentHits.includes(idx) || opponentMisses.includes(idx)) return; // Already targeted
-
+        console.log("reaches there", idx);
+        if (playerHits.includes(idx) || playerMisses.includes(idx)) return; // Already targeted
+        console.log("it's going to submit", idx);
         // Submit the cell index to your Route Action
         fetcher.submit({ cellIndex: idx.toString() }, { method: "POST" });
     };
