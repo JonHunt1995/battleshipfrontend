@@ -1,11 +1,14 @@
 import {
     useLoaderData,
     useFetcher,
+    useParams,
+    useRevalidator,
     type LoaderFunctionArgs,
     type ActionFunctionArgs,
 } from "react-router-dom";
 import PlayerCell from "./PlayerCell";
 import EnemyCell from "./EnemyCell";
+import useAdaptivePolling from "./useAdaptivePolling";
 
 export const gameBoardLoader = async ({ params }: LoaderFunctionArgs) => {
     const { gameid } = params;
@@ -61,6 +64,7 @@ interface GameState {
     PlayerLivingShips: ShipStatus;
     PlayerMisses: number[];
     PlayerShips: number[];
+    IsYourTurn: boolean;
 }
 
 const transformResponse = (rawJson: any): GameState => {
@@ -70,31 +74,45 @@ const transformResponse = (rawJson: any): GameState => {
         OpponentMisses: rawJson.OpponentMisses ?? [],
         PlayerHits: rawJson.PlayerHits ?? [],
         PlayerMisses: rawJson.PlayerMisses ?? [],
-        PlayerShips: rawJson.PlayerShips ?? [], // Already has data, but safe to include
+        PlayerShips: rawJson.PlayerShips ?? [],
     };
 };
 
 const GameBoard = () => {
-    const data = useLoaderData() as any;
-    const fetcher = useFetcher(); // Grab the fetcher hook
+    const data = useLoaderData() as GameState;
+    const fetcher = useFetcher();
+    const { gameid } = useParams();
+    const { revalidate } = useRevalidator();
 
     const gs = transformResponse(data);
-    const opponentHits = Object.values(gs.OpponentHits);
-    const opponentMisses = Object.values(gs.OpponentMisses);
+    const opponentHits = gs.OpponentHits;
+    const opponentMisses = gs.OpponentMisses;
+    const playerHits = gs.PlayerHits;
+    const playerShipsIndices = Object.values(gs.PlayerShips).flat();
+    const playerMisses = gs.PlayerMisses;
+    const currentTurn =
+        opponentHits.length +
+        opponentMisses.length +
+        playerHits.length +
+        playerMisses.length +
+        1;
 
+    useAdaptivePolling(
+        gameid as string,
+        currentTurn,
+        gs.IsYourTurn,
+        revalidate,
+    );
     // Read current submission state for loading feedback (Optimistic UI)
     const isSubmitting = fetcher.state !== "idle";
 
     const handleCellClick = (idx: number) => {
-        if (isSubmitting) return; // Prevent clicking while a move is processing
+        if (isSubmitting || !gs.IsYourTurn) return; // Prevent clicking while a move is processing
         if (opponentHits.includes(idx) || opponentMisses.includes(idx)) return; // Already targeted
 
         // Submit the cell index to your Route Action
         fetcher.submit({ cellIndex: idx.toString() }, { method: "POST" });
     };
-    const playerShipsIndices = Object.values(gs.PlayerShips).flat();
-    const playerHits = Object.values(gs.PlayerHits);
-    const playerMisses = Object.values(gs.PlayerMisses);
 
     const enemyCells = Array.from({ length: 100 }, (_, idx) => (
         <EnemyCell
