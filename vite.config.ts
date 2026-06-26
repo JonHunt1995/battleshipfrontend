@@ -3,7 +3,7 @@ import react from "@vitejs/plugin-react";
 
 // https://vite.dev/config/
 export default defineConfig({
-    base: "/battleshipfrontend/",
+    base: "/",
     plugins: [react()],
     server: {
         // This is the magic part
