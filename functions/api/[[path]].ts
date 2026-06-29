@@ -15,10 +15,7 @@ export const onRequest: PagesFunction<{ BACKEND_URL: string }> = async (context)
     redirect: 'manual',
   });
 
-  // 3. Optional: Set a secret header so your Go backend knows it's from CF
-  // proxyRequest.headers.set('X-Proxy-Secret', 'your-shared-secret');
-
-  // 4. Fetch from the Go backend and return the response
+  // 3. Fetch from the Go backend and return the response
   try {
     return await fetch(proxyRequest);
   } catch (e) {
