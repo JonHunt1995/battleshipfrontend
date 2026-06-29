@@ -71,8 +71,6 @@ const isValid = (curr: shipPosition, ships: ShipsState) => {
   return inBounds(curr) && noOverlaps(curr, ships);
 };
 
-const API_URL = "https://school-recognition-ping-quizzes.trycloudflare.com";
-
 export const uploadShipsAction = async ({
   request,
   params,
@@ -81,7 +79,7 @@ export const uploadShipsAction = async ({
   const shipsData = formData.get("shipsToUpload");
   const { gameid } = params;
 
-  const response = await fetch(`${API_URL}/api/setup/${gameid}`, {
+  const response = await fetch(`/api/setup/${gameid}`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: shipsData,

@@ -10,11 +10,9 @@ import PlayerCell from "./PlayerCell";
 import EnemyCell from "./EnemyCell";
 import useAdaptivePolling from "./useAdaptivePolling";
 
-const API_URL = "..";
-
 export const gameBoardLoader = async ({ params }: LoaderFunctionArgs) => {
     const { gameid } = params;
-    const response = await fetch(`${API_URL}/api/play/${gameid}`, {
+    const response = await fetch(`/api/play/${gameid}`, {
         method: "GET",
         credentials: "include",
     });
@@ -34,7 +32,7 @@ export const gameBoardAction = async ({
     const formData = await request.formData();
     const cellIndex = formData.get("cellIndex");
 
-    const response = await fetch(`${API_URL}/api/play/${gameid}`, {
+    const response = await fetch(`/api/play/${gameid}`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",

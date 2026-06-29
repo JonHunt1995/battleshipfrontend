@@ -8,8 +8,7 @@ export default function useAdaptivePolling(
 ) {
   useEffect(() => {
     let pollDelay: number | null = 600;
-    const API_URL = "https://school-recognition-ping-quizzes.trycloudflare.com";
-
+  
     // Doesn't poll if it's our turn
     if (isMyTurn) {
       console.log("[Polling] Sleeping... It is your turn.");
@@ -29,7 +28,7 @@ export default function useAdaptivePolling(
       try {
         console.log(`[Polling] Ping -> /api/poll/${gameid}/${currentTurn}`);
         const res = await fetch(
-          `${API_URL}/api/poll/${gameid}/${currentTurn}`,
+          `/api/poll/${gameid}/${currentTurn}`,
           {
             method: "GET",
             credentials: "include",
