@@ -1,9 +1,9 @@
 import "./App.css";
 import ShipPlacementModal, { uploadShipsAction } from "./ShipPlacementModal";
 import GameBoard, { gameBoardLoader, gameBoardAction } from "./GameBoard";
-import { createHashRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
-const router = createHashRouter([
+const router = createBrowserRouter([
   {
     path: "/:gameid",
     element: <ShipPlacementModal />,
