@@ -7,7 +7,7 @@ const useInviteLink = () => {
   const handleGenerateLink = async () => {
     setLoading(true);
     try {
-      const response = await fetch('/api/games', {
+      const response = await fetch('/api/newgame', {
         method: 'POST',
       });
 
