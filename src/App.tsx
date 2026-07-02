@@ -10,7 +10,7 @@ const router = createBrowserRouter([
     element: <HomePage />,
   },
   {
-    path: "/:gameid",
+    path: "/setup/:gameid",
     element: <ShipPlacementModal />,
     action: uploadShipsAction,
   },
