@@ -2,8 +2,13 @@ import "./App.css";
 import ShipPlacementModal, { uploadShipsAction } from "./ShipPlacementModal";
 import GameBoard, { gameBoardLoader, gameBoardAction } from "./GameBoard";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import HomePage from "./HomePage";
 
 const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <HomePage />,
+  },
   {
     path: "/:gameid",
     element: <ShipPlacementModal />,
