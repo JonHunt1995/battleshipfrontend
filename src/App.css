@@ -83,6 +83,7 @@
 
 #invite-link-container {
   display: flex;
+  flex-direction: column;
   flex-wrap: wrap;
   gap: 10px;
   justify-content: center;
@@ -92,9 +93,7 @@
 }
 
 #invite-link {
-  field-sizing: content;
-  max-width: 100%;
-  text-overflow: ellipsis;
+  width: 100%;
   overflow: hidden;
   white-space: nowrap;
   padding: 10px;
@@ -105,6 +104,12 @@
   min-width: 0;
 }
 
+#invite-link-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
 .copy-btn .join-btn {
   padding: 10px 15px;
   cursor: pointer;
