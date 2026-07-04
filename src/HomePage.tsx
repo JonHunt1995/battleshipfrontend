@@ -40,7 +40,7 @@ const HomePage = () => {
       </button>
         {link && (
         <div id="invite-link-container">
-          <input type="text" value={link} readOnly className="invite-link" />
+          <input type="text" value={link} readOnly className="invite-link" size={link.length}/>
           <button onClick={() => navigator.clipboard.writeText(link)} className="copy-btn">
             Copy Link
           </button>
