@@ -12,7 +12,7 @@ const useInviteLink = () => {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to create a new game');
+        throw new Error('Failed to create a new game.');
       }
 
       const data = await response.json();
