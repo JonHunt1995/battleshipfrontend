@@ -7,7 +7,7 @@ export default function useAdaptivePolling(
   onUpdate: () => void,
 ) {
   useEffect(() => {
-    let pollDelay: number | null = 600;
+    let pollDelay: number | null = 1200;
   
     // Doesn't poll if it's our turn
     if (isMyTurn) {
