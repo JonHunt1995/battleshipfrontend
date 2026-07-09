@@ -9,6 +9,7 @@ import {
 import PlayerCell from "./PlayerCell";
 import EnemyCell from "./EnemyCell";
 import useAdaptivePolling from "./useAdaptivePolling";
+import Result from "./Result";
 
 export const gameBoardLoader = async ({ params }: LoaderFunctionArgs) => {
     const { gameid } = params;
@@ -65,6 +66,9 @@ interface GameState {
     PlayerMisses: number[];
     PlayerShips: number[];
     IsYourTurn: boolean;
+    TurnNumber: number;
+    VictoryStatus: -1 | 0 | 1;
+    GameIsReady: boolean;
 }
 
 const transformResponse = (rawJson: any): GameState => {
@@ -90,17 +94,12 @@ const GameBoard = () => {
     const playerHits = gs.PlayerHits;
     const playerShipsIndices = Object.values(gs.PlayerShips).flat();
     const playerMisses = gs.PlayerMisses;
-    const currentTurn =
-        opponentHits.length +
-        opponentMisses.length +
-        playerHits.length +
-        playerMisses.length +
-        1;
 
     useAdaptivePolling(
         gameid as string,
-        currentTurn,
+        gs.TurnNumber,
         gs.IsYourTurn,
+        gs.VictoryStatus,
         revalidate,
     );
     // Read current submission state for loading feedback (Optimistic UI)
@@ -108,9 +107,7 @@ const GameBoard = () => {
 
     const handleCellClick = (idx: number) => {
         console.log("reaches here", idx);
-        if (isSubmitting || !gs.IsYourTurn) return; // Prevent clicking while a move is processing
-        console.log("reaches there", idx);
-        if (playerHits.includes(idx) || playerMisses.includes(idx)) return; // Already targeted
+        if (isSubmitting || !gs.IsYourTurn || gs.VictoryStatus !== 0 || playerHits.includes(idx) || playerMisses.includes(idx)) return; // Prevent clicking while a move is processing
         console.log("it's going to submit", idx);
         // Submit the cell index to your Route Action
         fetcher.submit({ cellIndex: idx.toString() }, { method: "POST" });
@@ -121,6 +118,7 @@ const GameBoard = () => {
             key={idx}
             isHit={playerHits.includes(idx)}
             isMiss={playerMisses.includes(idx)}
+            isPending={fetcher.formData?.get("cellIndex") === idx.toString()}
             idx={idx}
             onClick={handleCellClick}
         />
@@ -142,6 +140,7 @@ const GameBoard = () => {
             <div className="enemy board">{enemyCells}</div>
             <h2>Your Ships</h2>
             <div className="player board">{playerCells}</div>
+            {gs.VictoryStatus !== 0 && <Result victoryStatus={gs.VictoryStatus} />}
         </div>
     );
 };
