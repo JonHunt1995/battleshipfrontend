@@ -67,7 +67,7 @@ interface GameState {
     PlayerShips: number[];
     IsYourTurn: boolean;
     TurnNumber: number;
-    VictoryStatus: -1 | 0 | 1;
+    Victor: -1 | 0 | 1;
     GameIsReady: boolean;
 }
 
@@ -99,7 +99,7 @@ const GameBoard = () => {
         gameid as string,
         gs.TurnNumber,
         gs.IsYourTurn,
-        gs.VictoryStatus,
+        gs.Victor,
         revalidate,
     );
     // Read current submission state for loading feedback (Optimistic UI)
@@ -107,7 +107,7 @@ const GameBoard = () => {
 
     const handleCellClick = (idx: number) => {
         console.log("reaches here", idx);
-        if (isSubmitting || !gs.IsYourTurn || gs.VictoryStatus !== 0 || playerHits.includes(idx) || playerMisses.includes(idx)) return; // Prevent clicking while a move is processing
+        if (isSubmitting || !gs.IsYourTurn || gs.Victor !== 0 || playerHits.includes(idx) || playerMisses.includes(idx)) return; // Prevent clicking while a move is processing
         console.log("it's going to submit", idx);
         // Submit the cell index to your Route Action
         fetcher.submit({ cellIndex: idx.toString() }, { method: "POST" });
@@ -140,7 +140,7 @@ const GameBoard = () => {
             <div className="enemy board">{enemyCells}</div>
             <h2>Your Ships</h2>
             <div className="player board">{playerCells}</div>
-            {!!gs.VictoryStatus && <Result victoryStatus={gs.VictoryStatus} />}
+            {!!gs.Victor && <Result victoryStatus={gs.Victor} />}
         </div>
     );
 };
