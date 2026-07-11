@@ -9,7 +9,7 @@ export const onRequest: PagesFunction<{ BACKEND_URL: string }> = async (context)
   // This takes the path (e.g., /api/users) and appends it to your Go backend URL
   const backendTarget = new URL(url.pathname + url.search, env.BACKEND_URL);
   const newHeaders = new Headers(request.headers);
-  newHeaders.set('X-Forwarded-Host', originalHost);
+  newHeaders.set('X-Original-Host', originalHost);
   newHeaders.set('X-Forwarded-Proto', 'https');
   newHeaders.set('Host', backendTarget.hostname);
 
