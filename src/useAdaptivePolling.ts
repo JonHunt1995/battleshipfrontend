@@ -4,13 +4,14 @@ export default function useAdaptivePolling(
   gameid: string,
   currentTurn: number,
   isMyTurn: boolean,
+  victoryStatus: -1 | 0 | 1,
   onUpdate: () => void,
 ) {
   useEffect(() => {
-    let pollDelay: number | null = 1200;
+    let pollDelay: number | null = 900;
   
-    // Doesn't poll if it's our turn
-    if (isMyTurn) {
+    // Doesn't poll if it's our turn or if the game is over (victoryStatus !== 0)
+    if (isMyTurn || victoryStatus !== 0) {
       console.log("[Polling] Sleeping... It is your turn.");
       pollDelay = null;
     }
