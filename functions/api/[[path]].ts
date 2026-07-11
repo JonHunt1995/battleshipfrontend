@@ -7,17 +7,17 @@ export const onRequest: PagesFunction<{ BACKEND_URL: string }> = async (context)
   // 1. Construct the destination URL
   // This takes the path (e.g., /api/users) and appends it to your Go backend URL
   const backendTarget = new URL(url.pathname + url.search, env.BACKEND_URL);
+  const newHeaders = new Headers(request.headers);
+  newHeaders.set('X-Forwarded-Host', originalHost);
+  newHeaders.set('X-Forwarded-Proto', 'https');
 
   // 2. Clone the request but point it to the Go backend
   const proxyRequest = new Request(backendTarget, {
     method: request.method,
-    headers: request.headers,
+    headers: newHeaders,
     body: request.body,
     redirect: 'manual',
   });
-
-  proxyRequest.headers.set('X-Forwarded-Host', originalHost);
-  proxyRequest.headers.set('X-Forwarded-Proto', 'https');
 
   // 3. Fetch from the Go backend and return the response
   try {
