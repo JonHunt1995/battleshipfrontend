@@ -140,7 +140,7 @@ const GameBoard = () => {
             <div className="enemy board">{enemyCells}</div>
             <h2>Your Ships</h2>
             <div className="player board">{playerCells}</div>
-            {gs.VictoryStatus !== 0 && <Result victoryStatus={gs.VictoryStatus} />}
+            {!!gs.VictoryStatus && <Result victoryStatus={gs.VictoryStatus} />}
         </div>
     );
 };
