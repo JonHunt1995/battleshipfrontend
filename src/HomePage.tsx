@@ -46,7 +46,7 @@ const HomePage = () => {
                 Copy Link
             </button>
             <button onClick={() => window.location.href = link} className="join-btn">
-                Join Game
+                Join Game {`(${link})`}
             </button>
           </div>
         </div>
