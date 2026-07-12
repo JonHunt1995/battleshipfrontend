@@ -45,7 +45,10 @@ const HomePage = () => {
             <button onClick={() => navigator.clipboard.writeText(link)} className="copy-btn">
                 Copy Link
             </button>
-            <button onClick={() => window.location.href = link} className="join-btn">
+            <button onClick={
+                () => {
+                    window.location.href = link.startsWith('http') ? link : `https://${link}`;
+                }} className="join-btn">
                 Join Game
             </button>
           </div>
