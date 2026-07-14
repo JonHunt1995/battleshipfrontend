@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 
 export default function useAdaptivePolling(
   gameid: string,
@@ -7,53 +7,93 @@ export default function useAdaptivePolling(
   victoryStatus: -1 | 0 | 1,
   onUpdate: () => void,
 ) {
-  useEffect(() => {
-    let pollDelay: number | null = 900;
+  const [isPaused, setIsPaused] = useState(false);
+  const [currentInterval, setCurrentInterval] = useState<number>(500);
   
-    // Doesn't poll if it's our turn or if the game is over (victoryStatus !== 0)
-    if (isMyTurn || victoryStatus !== 0) {
-      console.log("[Polling] Sleeping... It is your turn.");
-      pollDelay = null;
+  const onUpdateRef = useRef(onUpdate);
+  
+  // Keep onUpdate fresh without triggering effect re-runs
+  useEffect(() => {
+    onUpdateRef.current = onUpdate;
+  }, [onUpdate]);
+
+  // Automatically unpause and reset interval when the turn changes
+  useEffect(() => {
+    setIsPaused(false);
+    setCurrentInterval(500);
+  }, [currentTurn]);
+
+  useEffect(() => {
+    // Break early if we shouldn't be polling
+    if (isMyTurn || victoryStatus !== 0 || isPaused) {
+      return;
     }
 
-    if (pollDelay === null) return;
+    let timerId: ReturnType<typeof setTimeout>;
+    let isCancelled = false;
 
-    console.log(
-      `[Polling] Started. Checking every ${pollDelay}ms for Turn > ${currentTurn}`,
-    );
+    const startTime = Date.now();
+    const PAUSE_THRESHOLD_MS = 180000; // 3 minutes
 
     const pollServer = async () => {
-      // If the user minimized the tab, don't ping the server
-      if (document.visibilityState !== "visible") return;
+      // Component unmounted, safe to kill loop
+      if (isCancelled) return; 
 
-      try {
-        console.log(`[Polling] Ping -> /api/poll/${gameid}/${currentTurn}`);
-        const res = await fetch(
-          `/api/poll/${gameid}/${currentTurn}`,
-          {
+      const elapsed = Date.now() - startTime;
+
+      // Guard Clause 1: Kill the loop if we hit the 3-minute mark
+      if (elapsed >= PAUSE_THRESHOLD_MS) {
+        setIsPaused(true);
+        return; 
+      }
+
+      // Guard Clause 2: Only fetch if the user is looking at the tab
+      const isVisible = document.visibilityState === "visible";
+      
+      if (isVisible) {
+        try {
+          const res = await fetch(`/api/poll/${gameid}/${currentTurn}`, {
             method: "GET",
             credentials: "include",
-          },
-        );
+          });
+          console.log(`Polling attempt for game ${gameid} at turn ${currentTurn}:`, res.status);
+          if (isCancelled) return;
 
-        // Indicates that a refresh of the data is needed
-        if (res.status === 200) {
-          onUpdate();
-        } else if (res.status === 304) {
-          console.log("🟡 [Polling] 304 Not Modified: Still waiting...");
+          if (res.status === 200) {
+            onUpdateRef.current();
+            return; // Successfully got new data, kill this loop!
+          }
+        } catch (error) {
+          // If the network drops temporarily, we swallow the error 
+          // so the loop stays alive and tries again on the next tick.
+          console.error("Polling error:", error);
         }
-      } catch (error) {
-        console.error("Polling error:", error);
       }
+
+      // Calculate the next step delay (Linear backoff: +500ms every 15s)
+      const stepCount = Math.floor(elapsed / 15000);
+      const nextDelay = 500 * (stepCount + 1);
+
+      // Update UI and keep the loop alive
+      setCurrentInterval(nextDelay);
+      timerId = setTimeout(pollServer, nextDelay);
     };
 
-    //Fire instantly once, then start the loop
+    // Fire instantly once, then start the recursive loop
     pollServer();
-    const intervalId = setInterval(pollServer, pollDelay);
 
+    // Cleanup when component unmounts or dependencies change
     return () => {
-      console.log("[Polling] Stopped interval cleanup.");
-      clearInterval(intervalId);
+      isCancelled = true;
+      clearTimeout(timerId);
     };
-  }, [gameid, currentTurn, isMyTurn]);
+  }, [gameid, currentTurn, isMyTurn, victoryStatus, isPaused]);
+
+  // Allow the UI to manually restart polling
+  const resumePolling = useCallback(() => {
+    setIsPaused(false);
+    setCurrentInterval(500);
+  }, []);
+
+  return { isPaused, currentInterval, resumePolling };
 }
