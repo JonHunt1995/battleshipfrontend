@@ -56,7 +56,7 @@ export default function useAdaptivePolling(
             method: "GET",
             credentials: "include",
           });
-
+          console.log(`Polling attempt for game ${gameid} at turn ${currentTurn}:`, res.status);
           if (isCancelled) return;
 
           if (res.status === 200) {
