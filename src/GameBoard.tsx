@@ -99,6 +99,7 @@ const GameBoard = () => {
         gameid as string,
         gs.TurnNumber,
         gs.IsYourTurn,
+        gs.GameIsReady,
         gs.Victor,
         revalidate,
     );
