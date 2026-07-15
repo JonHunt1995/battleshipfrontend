@@ -95,7 +95,8 @@ const GameBoard = () => {
     const playerShipsIndices = Object.values(gs.PlayerShips).flat();
     const playerMisses = gs.PlayerMisses;
 
-    useAdaptivePolling(
+    useAdapt
+    ivePolling(
         gameid as string,
         gs.TurnNumber,
         gs.IsYourTurn,
@@ -136,6 +137,7 @@ const GameBoard = () => {
     ));
     return (
         <div className="Game">
+            <h1>{gs.GameIsReady ? $`It is your ${gs.IsYourTurn ? "turn" : "opponent's turn"}` : "Game Not Ready"}</h1>
             <h2>Enemy Radar</h2>
             <div className="enemy board">{enemyCells}</div>
             <h2>Your Ships</h2>
