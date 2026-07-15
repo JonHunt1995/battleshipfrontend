@@ -4,6 +4,7 @@ export default function useAdaptivePolling(
   gameid: string,
   currentTurn: number,
   isMyTurn: boolean,
+  gameIsReady: boolean,
   victoryStatus: -1 | 0 | 1,
   onUpdate: () => void,
 ) {
@@ -25,7 +26,7 @@ export default function useAdaptivePolling(
 
   useEffect(() => {
     // Break early if we shouldn't be polling
-    if (isMyTurn || victoryStatus !== 0 || isPaused) {
+    if ((isMyTurn && gameIsReady) || victoryStatus !== 0 || isPaused) {
       return;
     }
 
