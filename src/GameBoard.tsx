@@ -95,8 +95,7 @@ const GameBoard = () => {
     const playerShipsIndices = Object.values(gs.PlayerShips).flat();
     const playerMisses = gs.PlayerMisses;
 
-    useAdapt
-    ivePolling(
+    useAdaptivePolling(
         gameid as string,
         gs.TurnNumber,
         gs.IsYourTurn,
@@ -108,7 +107,7 @@ const GameBoard = () => {
 
     const handleCellClick = (idx: number) => {
         console.log("reaches here", idx);
-        if (isSubmitting || !gs.IsYourTurn || gs.Victor !== 0 || playerHits.includes(idx) || playerMisses.includes(idx)) return; // Prevent clicking while a move is processing
+        if (isSubmitting || !gs.IsYourTurn || gs.Victor !== 0 || !gs.GameIsReady || playerHits.includes(idx) || playerMisses.includes(idx)) return; // Prevent clicking while a move is processing
         console.log("it's going to submit", idx);
         // Submit the cell index to your Route Action
         fetcher.submit({ cellIndex: idx.toString() }, { method: "POST" });
@@ -137,7 +136,7 @@ const GameBoard = () => {
     ));
     return (
         <div className="Game">
-            <h1>{gs.GameIsReady ? $`It is your ${gs.IsYourTurn ? "turn" : "opponent's turn"}` : "Game Not Ready"}</h1>
+            <h1>{gs.GameIsReady ? `It is your ${gs.IsYourTurn ? "turn" : "opponent's turn"}` : "Game Not Ready"}</h1>
             <h2>Enemy Radar</h2>
             <div className="enemy board">{enemyCells}</div>
             <h2>Your Ships</h2>
