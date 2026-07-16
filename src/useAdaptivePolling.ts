@@ -53,7 +53,7 @@ export default function useAdaptivePolling(
       
       if (isVisible) {
         try {
-          const res = await fetch(`/api/poll/${gameid}/${currentTurn}`, {
+          const res = await fetch(`/api/poll/${gameid}/${currentTurn}/${gameIsReady ? '2' : '1'}`, {
             method: "GET",
             credentials: "include",
           });
