@@ -233,7 +233,6 @@ const ShipPlacementModal = () => {
       hovered={
         isValid(currShipPosition, shipsToUpload) && highlighted.includes(idx)
       }
-      idx={idx}
       onMouseOver={() => handleMouseOver(idx)}
       onClick={handleClick}
     />

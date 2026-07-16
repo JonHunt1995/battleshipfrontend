@@ -2,7 +2,6 @@ type PlayerCellProps = {
   isShip: boolean;
   isHit: boolean;
   isMiss: boolean;
-  idx: number;
   style?: React.CSSProperties;
 };
 
