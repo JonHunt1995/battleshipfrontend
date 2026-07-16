@@ -6,7 +6,7 @@ type PlayerCellProps = {
   style?: React.CSSProperties;
 };
 
-function PlayerCell({ style, isShip, isHit, isMiss, idx }: PlayerCellProps) {
+function PlayerCell({ style, isShip, isHit, isMiss }: PlayerCellProps) {
   let styleClass = "water cell";
   if (isHit) {
     styleClass = "hit cell";
