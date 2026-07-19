@@ -131,7 +131,6 @@ const GameBoard = () => {
             isShip={playerShipsIndices.includes(idx)}
             isHit={opponentHits.includes(idx)}
             isMiss={opponentMisses.includes(idx)}
-            idx={idx}
             style={{ viewTransitionName: `cell-${idx}` }}
         />
     ));
