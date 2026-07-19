@@ -16,13 +16,14 @@ function ShipPlacementCell({
   onClick,
 }: ShipPlacementCellProps) {
   let styleClass = "water cell";
-  if (selected) {
-    styleClass = "ship cell";
+  if (invalid) {
+    styleClass = "invalid cell";
   } else if (hovered) {
     styleClass = "highlighted cell";
-  } else if (invalid) {
-    styleClass = "invalid cell";
+  } else if (selected) {
+    styleClass = "ship cell";
   }
+  
   return (
     <div
       style={style}
