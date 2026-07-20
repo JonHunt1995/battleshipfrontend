@@ -79,13 +79,14 @@ const findFirstEmptyShip = (ships: ShipsState): shipName => {
     "Submarine",
     "Destroyer",
   ];
+  
   for (const ship of shipNames) {
     if (ships[ship].length === 0) {
       return ship;
     }
-
-    return "Carrier";
   }
+
+  return "Carrier";
 }
 
 export const uploadShipsAction = async ({
@@ -137,13 +138,6 @@ const ShipPlacementModal = () => {
         (idx) => Math.floor(idx / 10) === Math.floor(highlighted[0] / 10),
       );
   const ships = getIndicesWithShips(shipsToUpload);
-  const shipNames: shipName[] = [
-    "Carrier",
-    "Battleship",
-    "Cruiser",
-    "Submarine",
-    "Destroyer",
-  ];
 
   // Needs index to reset candidate squares for ship
   const handleMouseOver = (index: number) => {
