@@ -71,6 +71,23 @@ const isValid = (curr: shipPosition, ships: ShipsState) => {
   return inBounds(curr) && noOverlaps(curr, ships);
 };
 
+const findFirstEmptyShip = (ships: ShipsState): shipName => {
+  const shipNames: shipName[] = [
+    "Carrier",
+    "Battleship",
+    "Cruiser",
+    "Submarine",
+    "Destroyer",
+  ];
+  for (const ship of shipNames) {
+    if (ships[ship].length === 0) {
+      return ship;
+    }
+
+    return "Carrier";
+  }
+}
+
 export const uploadShipsAction = async ({
   request,
   params,
@@ -144,8 +161,7 @@ const ShipPlacementModal = () => {
       ...shipsToUpload,
       [currShipPosition.name]: highlighted,
     });
-    const nextShip =
-      shipNames[(shipNames.indexOf(currShipPosition.name) % 5) + 1];
+    const nextShip = findFirstEmptyShip(shipsToUpload);
 
     setCurrShipPosition({ ...currShipPosition, name: nextShip });
   };
