@@ -133,10 +133,13 @@ const ShipPlacementModal = () => {
     setCurrShipPosition({ ...currShipPosition, idx: index });
   };
 
+  const notAllShipsAdded = Object.values(shipsToUpload).some(
+    (value) => value.length === 0,
+  );
+
   // Doesn't need input because the index was changed with handleMouseOver
   const handleClick = () => {
-    if (Object.values(shipsToUpload).every((v) => v.length > 0)) return
-    if (!isValid(currShipPosition, shipsToUpload)) return;
+    if (!notAllShipsAdded || !isValid(currShipPosition, shipsToUpload) || currShipPosition.name === undefined) return;
     setShipsToUpload({
       ...shipsToUpload,
       [currShipPosition.name]: highlighted,
@@ -238,10 +241,6 @@ const ShipPlacementModal = () => {
       onClick={handleClick}
     />
   ));
-
-  const notAllShipsAdded = Object.values(shipsToUpload).some(
-    (value) => value.length === 0,
-  );
 
   return (
     <section className="ShipPlaceModal">
