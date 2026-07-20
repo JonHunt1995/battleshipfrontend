@@ -135,6 +135,7 @@ const ShipPlacementModal = () => {
 
   // Doesn't need input because the index was changed with handleMouseOver
   const handleClick = () => {
+    if (Object.values(shipsToUpload).every((v) => v.length > 0)) return
     if (!isValid(currShipPosition, shipsToUpload)) return;
     setShipsToUpload({
       ...shipsToUpload,
