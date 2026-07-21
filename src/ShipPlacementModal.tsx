@@ -79,7 +79,7 @@ const findFirstEmptyShip = (ships: ShipsState): shipName => {
     "Submarine",
     "Destroyer",
   ];
-  
+
   for (const ship of shipNames) {
     if (ships[ship].length === 0) {
       return ship;
@@ -108,9 +108,7 @@ export const uploadShipsAction = async ({
     return { error: `Server error: ${response.status}` };
   }
 
-  const data = await response.json();
-
-  console.log(data);
+  await response.json();
 
   return redirect(`/play/${gameid}`);
 };
@@ -151,11 +149,18 @@ const ShipPlacementModal = () => {
   // Doesn't need input because the index was changed with handleMouseOver
   const handleClick = () => {
     if (!notAllShipsAdded || !isValid(currShipPosition, shipsToUpload) || currShipPosition.name === undefined) return;
+
+    const newShipsToUpload = {
+      ...shipsToUpload,
+      [currShipPosition.name]: highlighted,
+    }
+
     setShipsToUpload({
       ...shipsToUpload,
       [currShipPosition.name]: highlighted,
     });
-    const nextShip = findFirstEmptyShip(shipsToUpload);
+
+    const nextShip = findFirstEmptyShip(newShipsToUpload);
 
     setCurrShipPosition({ ...currShipPosition, name: nextShip });
   };
