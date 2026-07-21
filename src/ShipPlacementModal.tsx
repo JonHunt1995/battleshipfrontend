@@ -71,6 +71,24 @@ const isValid = (curr: shipPosition, ships: ShipsState) => {
   return inBounds(curr) && noOverlaps(curr, ships);
 };
 
+const findFirstEmptyShip = (ships: ShipsState): shipName => {
+  const shipNames: shipName[] = [
+    "Carrier",
+    "Battleship",
+    "Cruiser",
+    "Submarine",
+    "Destroyer",
+  ];
+
+  for (const ship of shipNames) {
+    if (ships[ship].length === 0) {
+      return ship;
+    }
+  }
+
+  return "Carrier";
+}
+
 export const uploadShipsAction = async ({
   request,
   params,
@@ -90,9 +108,7 @@ export const uploadShipsAction = async ({
     return { error: `Server error: ${response.status}` };
   }
 
-  const data = await response.json();
-
-  console.log(data);
+  await response.json();
 
   return redirect(`/play/${gameid}`);
 };
@@ -120,28 +136,32 @@ const ShipPlacementModal = () => {
         (idx) => Math.floor(idx / 10) === Math.floor(highlighted[0] / 10),
       );
   const ships = getIndicesWithShips(shipsToUpload);
-  const shipNames: shipName[] = [
-    "Carrier",
-    "Battleship",
-    "Cruiser",
-    "Submarine",
-    "Destroyer",
-  ];
+
+  const notAllShipsAdded = Object.values(shipsToUpload).some(
+    (value) => value.length === 0,
+  );
 
   // Needs index to reset candidate squares for ship
   const handleMouseOver = (index: number) => {
+    if (!notAllShipsAdded) return;
     setCurrShipPosition({ ...currShipPosition, idx: index });
   };
 
   // Doesn't need input because the index was changed with handleMouseOver
   const handleClick = () => {
-    if (!isValid(currShipPosition, shipsToUpload)) return;
+    if (!notAllShipsAdded || !isValid(currShipPosition, shipsToUpload) || currShipPosition.name === undefined) return;
+
+    const newShipsToUpload = {
+      ...shipsToUpload,
+      [currShipPosition.name]: highlighted,
+    }
+
     setShipsToUpload({
       ...shipsToUpload,
       [currShipPosition.name]: highlighted,
     });
-    const nextShip =
-      shipNames[(shipNames.indexOf(currShipPosition.name) % 5) + 1];
+
+    const nextShip = findFirstEmptyShip(newShipsToUpload);
 
     setCurrShipPosition({ ...currShipPosition, name: nextShip });
   };
@@ -228,19 +248,16 @@ const ShipPlacementModal = () => {
       }
       invalid={
         !isValid(currShipPosition, shipsToUpload) &&
-        sameRowHighlighted.includes(idx)
+        sameRowHighlighted.includes(idx) &&
+        notAllShipsAdded
       }
       hovered={
-        isValid(currShipPosition, shipsToUpload) && highlighted.includes(idx)
+        isValid(currShipPosition, shipsToUpload) && highlighted.includes(idx) && notAllShipsAdded
       }
       onMouseOver={() => handleMouseOver(idx)}
       onClick={handleClick}
     />
   ));
-
-  const notAllShipsAdded = Object.values(shipsToUpload).some(
-    (value) => value.length === 0,
-  );
 
   return (
     <section className="ShipPlaceModal">
