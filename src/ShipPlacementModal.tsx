@@ -137,14 +137,15 @@ const ShipPlacementModal = () => {
       );
   const ships = getIndicesWithShips(shipsToUpload);
 
-  // Needs index to reset candidate squares for ship
-  const handleMouseOver = (index: number) => {
-    setCurrShipPosition({ ...currShipPosition, idx: index });
-  };
-
   const notAllShipsAdded = Object.values(shipsToUpload).some(
     (value) => value.length === 0,
   );
+
+  // Needs index to reset candidate squares for ship
+  const handleMouseOver = (index: number) => {
+    if (!notAllShipsAdded) return;
+    setCurrShipPosition({ ...currShipPosition, idx: index });
+  };
 
   // Doesn't need input because the index was changed with handleMouseOver
   const handleClick = () => {
@@ -247,10 +248,11 @@ const ShipPlacementModal = () => {
       }
       invalid={
         !isValid(currShipPosition, shipsToUpload) &&
-        sameRowHighlighted.includes(idx)
+        sameRowHighlighted.includes(idx) &&
+        notAllShipsAdded
       }
       hovered={
-        isValid(currShipPosition, shipsToUpload) && highlighted.includes(idx)
+        isValid(currShipPosition, shipsToUpload) && highlighted.includes(idx) && notAllShipsAdded
       }
       onMouseOver={() => handleMouseOver(idx)}
       onClick={handleClick}
