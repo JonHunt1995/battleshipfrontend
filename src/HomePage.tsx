@@ -52,7 +52,7 @@ const HomePage = () => {
                 }} className="join-btn">
                 Join Game
             </button>
-            <ReactQRCode id="qr-code" value={link.startsWith('http') ? link : `https://${link}} />
+            <ReactQRCode id="qr-code" value={link.startsWith('http') ? link : `https://${link}}`} />
           </div>
         </div>
         )}
