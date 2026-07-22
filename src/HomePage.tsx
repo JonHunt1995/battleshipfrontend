@@ -54,7 +54,7 @@ const HomePage = () => {
             </button>
           </div>
           <div id="qr-code-container">
-                <ReactQRCode id="qr-code" value={link.startsWith('http') ? link : `https://${link}}`} />
+                <ReactQRCode value={link.startsWith('http') ? link : `https://${link}}`} />
             </div>
         </div>
         )}
