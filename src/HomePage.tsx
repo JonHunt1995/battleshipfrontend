@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { ReactQRCode } from '@lglab/react-qr-code';
 
 const useInviteLink = () => {
   const [link, setLink] = useState<string | null>(null);
@@ -52,6 +53,9 @@ const HomePage = () => {
                 Join Game
             </button>
           </div>
+          <div id="qr-code-container">
+                <ReactQRCode value={link.startsWith('http') ? link : `https://${link}}`} />
+            </div>
         </div>
         )}
         </section>
