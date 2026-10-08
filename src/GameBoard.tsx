@@ -10,6 +10,7 @@ import PlayerCell from "./PlayerCell";
 import EnemyCell from "./EnemyCell";
 import useAdaptivePolling from "./useAdaptivePolling";
 import Result from "./Result";
+import GameHud from "./GameHud";
 
 const mockDemoState: GameState = {
     OpponentHits: [14, 15, 16],
@@ -177,9 +178,26 @@ const GameBoard = () => {
     ));
     return (
         <div className="Game">
-            <header className="game-status">
-                <h1>{gs.GameIsReady ? `It is your ${gs.IsYourTurn ? "turn" : "opponent's turn"}` : "Waiting for opponent to join"}</h1>
-            </header>
+            <GameHud
+                gameInfo={{
+                    playerHits: playerHits,
+                    playerMisses: playerMisses,
+                    playerLivingShips: gs.PlayerLivingShips,
+                    opponentHits: opponentHits,
+                    opponentMisses: opponentMisses,
+                    opponentLivingShips: gs.OpponentLivingShips,
+                    isTurn: gs.IsYourTurn,
+                    gameIsReady: gs.GameIsReady,
+                }}
+            />
+            {!gs.GameIsReady && (
+                <div className="waiting-overlay">
+                    <div className="waiting-modal">
+                        <h2>Waiting for opponent to join</h2>
+                        <p>Share your invite link to begin combat.</p>
+                    </div>
+                </div>
+            )}
             <div className="clamshell-container">
                 <div className="camera">
                     <div className="panel screen">
