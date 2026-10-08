@@ -43,6 +43,17 @@ export const gameBoardLoader = async ({ params }: LoaderFunctionArgs) => {
     if (gameid === "demo") {
         return mockDemoState;
     }
+    if (gameid === "demo-win" || gameid === "demo-victory") {
+        return { ...mockDemoState, Victor: 1 };
+    }
+    if (
+        gameid === "demo-loss" ||
+        gameid === "demo-lost" ||
+        gameid === "demo-lose" ||
+        gameid === "demo-defeat"
+    ) {
+        return { ...mockDemoState, Victor: -1 };
+    }
     try {
         const response = await fetch(`/api/play/${gameid}`, {
             method: "GET",
