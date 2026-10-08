@@ -337,7 +337,7 @@
   cursor: default;
 }
 
-@media (max-aspect-ratio: 1/1.35) {
+@media (max-width: 768px), (orientation: portrait) {
   :root {
     --grid-size: min(calc(92vw - 2 * var(--bezel)), calc((98vh - var(--header-h) - 2 * var(--panel-header-h) - 4 * var(--bezel)) / 2));
     --panel-w: calc(var(--grid-size) + 2 * var(--bezel));
