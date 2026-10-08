@@ -128,11 +128,13 @@
   align-items: center;
   gap: 2px;
   background: #111827;
-  padding: 3px 12px;
+  padding: 3px 8px;
   margin: 0 0 0.25rem 0;
   box-sizing: border-box;
-  font-size: clamp(0.5rem, 1.6vw + 0.1rem, 0.85rem);
-  font-family: monospace, sans-serif;
+  font-size: clamp(0.6rem, 2.2vw + 0.05rem, 0.875rem);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   color: #cbd5e1;
   user-select: none;
 }
@@ -142,7 +144,7 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  gap: clamp(0.4em, 1.5vw, 1em);
+  gap: clamp(0.35em, 1.2vw, 1em);
   width: 100%;
   max-width: min(100%, 960px);
   white-space: nowrap;
@@ -176,7 +178,7 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  gap: clamp(0.4em, 1.2vw, 0.9em);
+  gap: clamp(0.3em, 1vw, 0.9em);
 }
 
 .alive {
@@ -276,10 +278,11 @@
   color: #64748b;
   font-family: sans-serif;
   font-weight: 700;
-  font-size: clamp(0.6rem, 1vw, 0.72rem);
+  font-size: clamp(0.68rem, 1.2vw, 0.78rem);
   text-transform: uppercase;
   letter-spacing: 1.5px;
   line-height: 1;
+  -webkit-font-smoothing: antialiased;
 }
 
 .panel.screen {
@@ -344,14 +347,18 @@
 
   .clamshell-container {
     perspective: none;
+    -webkit-perspective: none;
   }
 
   .camera {
     transform: none;
+    transform-style: flat;
+    -webkit-transform-style: flat;
   }
 
   .panel.base {
     transform: none;
+    transform-origin: initial;
   }
 }
 
