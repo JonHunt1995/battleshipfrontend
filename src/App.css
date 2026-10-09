@@ -1,9 +1,9 @@
 :root {
   --header-h: 3.25rem;
-  --avail-vh: calc(98vh - var(--header-h));
+  --avail-vh: calc(98dvh - var(--header-h));
   --bezel: 5px;
   --panel-header-h: 1.25rem;
-  --grid-size: clamp(280px, min(calc(var(--avail-vh) * 0.58), calc(42vh + 10vw)), 580px);
+  --grid-size: clamp(280px, min(calc(var(--avail-vh) * 0.58), calc(42dvh + 10vw)), 580px);
   --panel-w: calc(var(--grid-size) + 2 * var(--bezel));
   --panel-h: calc(var(--grid-size) + var(--panel-header-h) + var(--bezel));
   --remaining: max(0px, calc(var(--avail-vh) - var(--panel-h)));
@@ -113,9 +113,11 @@
   margin: 0 auto;
   align-items: center;
   width: 100%;
-  min-height: 100vh;
+  height: 100dvh;
+  max-height: 100dvh;
   box-sizing: border-box;
-  overflow-x: hidden;
+  overflow: hidden;
+  overscroll-behavior: none;
 }
 
 .hud {
@@ -318,6 +320,9 @@
   padding: 0;
   background: #000;
   box-sizing: border-box;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .camera .board .cell {
@@ -327,6 +332,8 @@
   outline: solid black 2px;
   border: none;
   border-radius: 0;
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .camera .enemy.board .cell {
@@ -339,7 +346,7 @@
 
 @media (max-width: 768px), (orientation: portrait) {
   :root {
-    --grid-size: min(calc(92vw - 2 * var(--bezel)), calc((98vh - var(--header-h) - 2 * var(--panel-header-h) - 4 * var(--bezel)) / 2));
+    --grid-size: min(calc(92vw - 2 * var(--bezel)), calc((96dvh - var(--header-h) - 2 * var(--panel-header-h) - 4 * var(--bezel)) / 2));
     --panel-w: calc(var(--grid-size) + 2 * var(--bezel));
     --panel-h: calc(var(--grid-size) + var(--panel-header-h) + var(--bezel));
     --angle: 0deg;
